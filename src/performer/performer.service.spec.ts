@@ -79,6 +79,18 @@ describe('PerformerService', () => {
     expect(storedPerformer.descripcion).toEqual(newPerformer.descripcion)
   });
 
+  it('create shoud throw an exception for an invalid descripcion', async () => {
+    const performer: PerformerEntity = {
+      id: "",
+      nombre: faker.string.alphanumeric(10),
+      imagen: faker.string.alphanumeric(10),
+      descripcion: faker.string.alphanumeric(101),
+      albums: []
+    }
+    await expect(() => service.create(performer)).rejects.toHaveProperty("message", "The length of the description cannot have more than 100 characters")
+
+  });
+
   it('update should modify a performer', async () => {
     const performer: PerformerEntity = performersList[0];
     performer.nombre = "New name";

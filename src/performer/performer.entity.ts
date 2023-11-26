@@ -16,6 +16,6 @@ export class PerformerEntity {
     @Column()
     descripcion: string;
 
-    @ManyToMany(() => AlbumEntity, (album) => album.performers)
+    @ManyToMany(() => AlbumEntity, album => album.performers)
     albums: AlbumEntity[];
 }

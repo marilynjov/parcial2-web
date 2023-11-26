@@ -7,11 +7,13 @@ import { TrackEntity } from './track.entity';
 import { TrackService } from './track.service';
 
 import { faker } from '@faker-js/faker';
+import { AlbumEntity } from '../album/album.entity';
 
 describe('TrackService', () => {
   let service: TrackService;
   let repository: Repository<TrackEntity>;
   let tracksList: TrackEntity[];
+  let albumRepo: Repository<AlbumEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +23,7 @@ describe('TrackService', () => {
 
     service = module.get<TrackService>(TrackService);
     repository = module.get<Repository<TrackEntity>>(getRepositoryToken(TrackEntity));
+    albumRepo = module.get<Repository<AlbumEntity>>(getRepositoryToken(AlbumEntity));
     await seedDatabase();
   });
 
@@ -59,20 +62,71 @@ describe('TrackService', () => {
   });
 
   it('create should return a new track', async () => {
+    
+    const album: AlbumEntity = await albumRepo.save({
+      nombre: faker.lorem.word(),
+      fechaLanzamiento: faker.date.past(),
+      descripcion: faker.lorem.sentence(),
+      caratula: faker.image.url(),
+      tracks: [],
+      performers: []
+    });
+
     const track: TrackEntity = {
       id: "",
       nombre: faker.string.alphanumeric(10),
       duracion: faker.number.int(10),
-      album:null
+      album:album
     }
 
-    const newTrack: TrackEntity = await service.create(track);
+    const newTrack: TrackEntity = await service.create(track,album.id);
     expect(newTrack).not.toBeNull();
 
     const storedTrack: TrackEntity = await repository.findOne({where: {id: newTrack.id}})
     expect(storedTrack).not.toBeNull();
     expect(storedTrack.nombre).toEqual(newTrack.nombre)
     expect(storedTrack.duracion).toEqual(newTrack.duracion)
+  });
+
+
+  it('create should throw an exception for an invalid album id', async () => {
+    const album: AlbumEntity = await albumRepo.save({
+      nombre: faker.lorem.word(),
+      fechaLanzamiento: faker.date.past(),
+      descripcion: faker.lorem.sentence(),
+      caratula: faker.image.url(),
+      tracks: [],
+      performers: []
+    });
+
+    const track: TrackEntity = {
+      id: "",
+      nombre: faker.string.alphanumeric(10),
+      duracion: faker.number.int(10),
+      album:album
+    }
+
+    await expect(() => service.create(track,"0")).rejects.toHaveProperty("message", "The album with the given id was not found")
+  });
+
+  it('create should throw an exception for an invalid length of track', async () => {
+    const album: AlbumEntity = await albumRepo.save({
+      nombre: faker.lorem.word(),
+      fechaLanzamiento: faker.date.past(),
+      descripcion: faker.lorem.sentence(),
+      caratula: faker.image.url(),
+      tracks: [],
+      performers: []
+    });
+
+    const track: TrackEntity = {
+      id: "",
+      nombre: faker.string.alphanumeric(10),
+      duracion: -1,
+      album:album
+    }
+
+    await expect(() => service.create(track,album.id)).rejects.toHaveProperty("message", "The length of the track is not greater than 0")
   });
 
   it('update should modify a track', async () => {

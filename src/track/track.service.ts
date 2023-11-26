@@ -4,12 +4,16 @@ import { TrackEntity } from './track.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BusinessError, BusinessLogicException } from '../shared/errors/business-errors';
+import { AlbumEntity } from '../album/album.entity';
 
 @Injectable()
 export class TrackService {
     constructor(
         @InjectRepository(TrackEntity)
-        private readonly trackRepository: Repository<TrackEntity>
+        private readonly trackRepository: Repository<TrackEntity>,
+
+        @InjectRepository(AlbumEntity)
+        private readonly albumRepository: Repository<AlbumEntity>
     ){}
 
     async findAll(): Promise<TrackEntity[]> {
@@ -24,7 +28,15 @@ export class TrackService {
         return track;
     }
    
-    async create(track: TrackEntity): Promise<TrackEntity> {
+    async create(track: TrackEntity,albumId: string): Promise<TrackEntity> { 
+        const album = await this.albumRepository.findOne({where: {id: albumId}, relations: ["performers"] });
+
+        if(!album){
+            throw new BusinessLogicException("The album with the given id was not found", BusinessError.NOT_FOUND);
+        }
+        if(track.duracion < 0){
+            throw new BusinessLogicException("The length of the track is not greater than 0", BusinessError.NOT_FOUND);
+        }
         return await this.trackRepository.save(track);
     }
  

@@ -25,6 +25,9 @@ export class PerformerService {
     }
    
     async create(performer: PerformerEntity): Promise<PerformerEntity> {
+        if(performer.descripcion.length>100){
+            throw new BusinessLogicException("The length of the description cannot have more than 100 characters", BusinessError.BAD_REQUEST);
+        }
         return await this.performerRepository.save(performer);
     }
  

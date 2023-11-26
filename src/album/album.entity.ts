@@ -2,7 +2,7 @@
 import { PerformerEntity } from '../performer/performer.entity';
 import { TrackEntity } from '../track/track.entity';
 
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class AlbumEntity {
@@ -21,7 +21,8 @@ export class AlbumEntity {
     @Column()
     descripcion: string;
 
-    @ManyToMany(() => PerformerEntity, (performer) => performer.albums)
+    @ManyToMany(() => PerformerEntity, performer => performer.albums)
+    @JoinTable()
     performers: PerformerEntity[];
 
     @OneToMany(() => TrackEntity, track => track.album)

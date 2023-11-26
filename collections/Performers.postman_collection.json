@@ -1,0 +1,519 @@
+{
+	"info": {
+		"_postman_id": "4f5baba0-e243-489b-be6c-6f563887306b",
+		"name": "Performers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23144667",
+		"_collection_link": "https://martian-sunset-321186.postman.co/workspace/Web~3bef2808-dd77-4ca2-b0af-a6d48e43ccaa/collection/23144667-4f5baba0-e243-489b-be6c-6f563887306b?action=share&source=collection_link&creator=23144667"
+	},
+	"item": [
+		{
+			"name": "Crear un performer valido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = pm.response.json()\r",
+							"pm.globals.set(\"performer_id\", data.id);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\":\"The Palms\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"Main artist\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/performers"
+			},
+			"response": [
+				{
+					"name": "Crear un performer valido",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1,\"nombre\":\"Scott Smith\",\r\n    \"correo\":\"scothsmith@gmail.com\",\r\n    \"contrasena\":\"vF@OJx)wxUEK\",\r\n    \"telefono\":\"649-340-4940\",\r\n    \"direccion\":\"62437 Derek Circle\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/performers"
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"nombre\":\"The Palms\",\n    \"imagen\":\"urlImagen\",\n    \"descripcion\":\"Main artist\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Crear un performer con descripcion invalida",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"   pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The length of the description cannot have more than 100 characters\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\":\"The Palms\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"An enigmatic creator weaving sonic landscapes that transcend genres, the mysterious artist captivates with their innovative soundscapes, melding ethereal melodies and pulsating rhythms into a tapestry of musical expression that defies categorization.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/performers"
+			},
+			"response": [
+				{
+					"name": "Crear un performer con descripcion invalida",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1,\"nombre\":\"Scott Smith\",\r\n    \"correo\":\"scothsmith@gmail.com\",\r\n    \"contrasena\":\"vF@OJx)wxUEK\",\r\n    \"telefono\":\"649-340-4940\",\r\n    \"direccion\":\"62437 Derek Circle\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/performers"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Obtener todos los performers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Number of albums > ' + 0, function () {\r",
+							"   var data = pm.response.json()\r",
+							"   pm.expect(data.length).to.greaterThan(0)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\"id\":1,\r\n    \"nombre\":\"The Palms\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"Main artist\"  \r\n    },\r\n    {\"id\":2,\r\n    \"nombre\":\"TNBH\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"Band\"  \r\n    }\r\n]"
+				},
+				"url": "http://localhost:3000/api/v1/performers"
+			},
+			"response": [
+				{
+					"name": "Obtener todos los performers",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Scott Smith\",\r\n    \"correo\":\"scothsmith@gmail.com\",\r\n    \"contrasena\":\"vF@OJx)wxUEK\",\r\n    \"telefono\":\"649-340-4940\",\r\n    \"direccion\":\"62437 Derek Circle\"\r\n    \r\n}"
+						},
+						"url": "http://localhost:3000/api/v1/performers"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\r\n    {\"id\":1,\r\n    \"nombre\":\"The Palms\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"Main artist\"  \r\n    },\r\n    {\"id\":2,\r\n    \"nombre\":\"TNBH\",\r\n    \"imagen\":\"urlImagen\",\r\n    \"descripcion\":\"Band\"  \r\n    }\r\n]"
+				}
+			]
+		},
+		{
+			"name": "Obtener un performer valido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+			},
+			"response": [
+				{
+					"name": "Obtener un performer valido",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/albperformersum/{{performer_id}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"direccion\": \"Avenida 19 # 56-78\",\n        \"fecha_sugerida\": \"30/04/2023\",\n        \"hora_sugerida\": \"10:00 AM\",\n        \"tipo_desecho\": \"Basura Ordinaria\",\n        \"descripcion\": \"Texto del usuario\",\n        \"id_usuario\": \"Scott Smith\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Obtener un performer invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The performer with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://localhost:3000/api/v1/performers/00000000-0000-0000-0000-000000000000"
+			},
+			"response": [
+				{
+					"name": "Obtener un performer invalido",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/performers/00000000-0000-0000-0000-000000000000"
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The user with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Borrar un performer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"   pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+			},
+			"response": [
+				{
+					"name": "Borrar un performer",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Borrar un performer invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The performer with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+			},
+			"response": [
+				{
+					"name": "Borrar un performer invalido",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The album with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Actualizar performer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Sway\",\r\n    \"caratula\": \"urlCaratula\",\r\n    \"fechaLanzamiento\": \"2016-05-12\",\r\n    \"decripcion\": \"6 canciones (NEW)\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+			},
+			"response": [
+				{
+					"name": "Actualizar performer",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/performers/{{performer_id}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"nombre\": \"Sway\",\n    \"caratula\": \"urlCaratula\",\n    \"fechaLanzamiento\": \"2016-05-12\",\n    \"decripcion\": \"6 canciones (NEW)\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Actualizar un performer invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The performer with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Sway\",\r\n    \"caratula\": \"urlCaratula\",\r\n    \"fechaLanzamiento\": \"2016-05-12\",\r\n    \"decripcion\": \"6 canciones (NEW)\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/performers/00000000-0000-0000-0000-000000000000"
+			},
+			"response": [
+				{
+					"name": "Actualizar un performer invalido",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/performers/00000000-0000-0000-0000-00000000000"
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The user with the given id was not found\"\n}"
+				}
+			]
+		}
+	]
+}

@@ -23,8 +23,15 @@ export class AlbumService {
    
         return album;
     }
-   
+
     async create(album: AlbumEntity): Promise<AlbumEntity> {
+        if(album.nombre===""|| album.nombre==null){
+            throw new BusinessLogicException("The name of the album cannot be null",BusinessError.BAD_REQUEST);
+        }
+        if(album.descripcion===""|| album.descripcion==null){
+            throw new BusinessLogicException("The description of the album cannot be null",BusinessError.BAD_REQUEST);
+        }
+
         return await this.albumRepository.save(album);
     }
  

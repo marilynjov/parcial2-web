@@ -84,6 +84,37 @@ describe('AlbumService', () => {
     expect(storedAlbum.descripcion).toEqual(newAlbum.descripcion)
   });
 
+  it('create should throw an exception if invalid album name', async () => {
+    const album: AlbumEntity = {
+      id: "",
+      nombre: null,
+      caratula: faker.string.alphanumeric(10),
+      fechaLanzamiento: faker.date.past(),
+      descripcion: faker.string.alphanumeric(10),
+      performers: [],
+      tracks:null
+    }
+
+    await expect(() => service.create(album)).rejects.toHaveProperty("message", "The name of the album cannot be null")
+
+
+  });
+
+  it('create should throw an exception if invalid album name', async () => {
+    const album: AlbumEntity = {
+      id: "",
+      nombre: faker.string.alphanumeric(10),
+      caratula: faker.string.alphanumeric(10),
+      fechaLanzamiento: faker.date.past(),
+      descripcion: "",
+      performers: [],
+      tracks:null
+    }
+
+    await expect(() => service.create(album)).rejects.toHaveProperty("message", "The description of the album cannot be null")
+
+  });
+
   it('update should modify a album', async () => {
     const album: AlbumEntity = albumsList[0];
     album.nombre = "New name";
